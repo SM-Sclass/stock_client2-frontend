@@ -13,7 +13,7 @@ import SystemStatus from './SystemStatus'
 const logoutUser = async () => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/logout`, {
-      method: "GET",
+      method: "POST",
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
