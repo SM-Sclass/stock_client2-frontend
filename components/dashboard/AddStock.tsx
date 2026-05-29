@@ -35,6 +35,7 @@ export const addAndEditStockSchema = z.object({
   target: z.number().min(0.01, 'Target must be greater than 0'),
   stoploss: z.number().min(0.01, 'Stoploss must be greater than 0'),
   quantity: z.number().min(1, 'Quantity must be at least 1'),
+  order_price_limit: z.number().optional(),
   status: z.string().min(1, 'Status is required'),
 })
 
@@ -57,6 +58,7 @@ function AddStock({ onSuccess }: Props) {
       target: 0,
       stoploss: 0,
       quantity: 1,
+      order_price_limit:0,
       status: 'ACTIVE'
     },
   })
@@ -134,7 +136,9 @@ function AddStock({ onSuccess }: Props) {
                   className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm text-gray-400 cursor-not-allowed outline-none"
                   readOnly
                 />
+                {errors.exchange && <p className="text-red-400 text-xs mt-1.5 ml-1 font-medium">{errors.exchange.message}</p>}
               </div>
+
 
               <div className='space-y-2'>
                 <label htmlFor="instrument_token" className="text-sm font-semibold text-gray-400 ml-1">Instrument Token</label>
@@ -145,6 +149,7 @@ function AddStock({ onSuccess }: Props) {
                   className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm text-gray-400 cursor-not-allowed outline-none"
                   readOnly
                 />
+                {errors.instrument_token && <p className="text-red-400 text-xs mt-1.5 ml-1 font-medium">{errors.instrument_token.message}</p>}
               </div>
             </div>
 
@@ -185,6 +190,18 @@ function AddStock({ onSuccess }: Props) {
                   placeholder="1"
                 />
                 {errors.quantity && <p className="text-red-400 text-[10px] font-medium mt-1 ml-1">{errors.quantity.message}</p>}
+              </div>
+
+              <div className='space-y-2 group/input'>
+                <label htmlFor="order_price_limit" className="text-sm font-semibold text-gray-400 ml-1">Order Price Limit</label>
+                <input
+                  type="number"
+                  id="order_price_limit"
+                  {...register('order_price_limit', { valueAsNumber: true })}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-2xl focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none text-sm font-medium text-white"
+                  placeholder="50,000.50"
+                />
+                {errors.order_price_limit && <p className="text-red-400 text-[10px] font-medium mt-1 ml-1">{errors.order_price_limit.message}</p>}
               </div>
             </div>
 

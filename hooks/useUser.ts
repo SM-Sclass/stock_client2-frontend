@@ -24,7 +24,7 @@ const fetchUserProfile = async (): Promise<{ user: TUser }> => {
 }
 
 
-export function useUser() {
+function useUser() {
   const [user, setUser] = useState<TUser | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 

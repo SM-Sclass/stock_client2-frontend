@@ -1,15 +1,17 @@
+import React from 'react'
+import { Power, Loader2 } from 'lucide-react'
 import Dialog from '../molecule/Dialog'
-import { Trash2, Loader2 } from 'lucide-react'
+import { TTrackingStock } from '@/types/tracking_stock.type'
 
 type Props = {
-  isOpen: boolean
-  setIsOpen: (isOpen: boolean) => void
-  onConfirm: () => void
-  stockName: string
-  isLoading: boolean
+  isOpen:boolean
+  setIsOpen:React.Dispatch<React.SetStateAction<boolean>>
+  selectedStock:TTrackingStock
+  onConfirm:()=>void
+  isLoading:boolean
 }
 
-function DeleteTrackingStock({ isOpen, setIsOpen, onConfirm, stockName, isLoading }: Props) {
+export default function StopStockTracking({isOpen, setIsOpen, selectedStock, onConfirm, isLoading}: Props) {
   return (
     <Dialog
       isOpen={isOpen}
@@ -20,12 +22,12 @@ function DeleteTrackingStock({ isOpen, setIsOpen, onConfirm, stockName, isLoadin
 
         <div className="flex flex-col items-center justify-center gap-6 relative">
           <div className="p-6 bg-red-500/10 rounded-full border border-red-500/20 group-hover:scale-110 transition-transform duration-500">
-            <Trash2 className="w-12 h-12 text-red-500" />
+            <Power className="w-12 h-12 text-red-500" />
           </div>
           <div className="text-center space-y-2">
-            <h3 className="text-2xl font-extrabold text-white">Delete Tracking Stock</h3>
+            <h3 className="text-2xl font-extrabold text-white">Stop Tracking Stock</h3>
             <p className="text-muted-foreground max-w-xs mx-auto">
-              Are you sure you want to delete <span className="text-primary font-bold">{stockName}</span>? This action cannot be undone.
+              Are you sure you want to stop tracking <span className="text-primary font-bold">{selectedStock.trading_symbol}</span>?
             </p>
           </div>
         </div>
@@ -42,12 +44,10 @@ function DeleteTrackingStock({ isOpen, setIsOpen, onConfirm, stockName, isLoadin
             disabled={isLoading}
             className="w-full md:flex-1 px-10 py-3.5 text-sm font-bold text-white bg-red-600/90 hover:bg-red-600 rounded-2xl transition-all shadow-lg shadow-red-600/20"
           >
-            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Delete Stock'}
+            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Stop Tracking'}
           </button>
         </div>
       </div>
     </Dialog>
   )
 }
-
-export default DeleteTrackingStock

@@ -49,8 +49,17 @@ export const useOrdersQuery = (stockId: number) => {
   }, [pageNumber, stockId])
 
   useEffect(() => {
-    fetchOrders()
-  }, [])
+    let isMounted = true
+    const executeFetch = async () => {
+      if (isMounted) await fetchOrders()
+    }
+    executeFetch()
+    return () => { isMounted = false }
+  }, [fetchOrders])
+
+  useEffect(() => {
+    setPageNumber(1)
+  }, [stockId])
 
   const next = () => {
     if (pageNumber === Math.ceil(totalCount / 10)) return

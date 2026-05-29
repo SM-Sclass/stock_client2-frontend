@@ -3,10 +3,13 @@ import { useEffect, useState, useCallback } from 'react'
 import ListTrackingStock from './ListTrackingStock'
 import AddStock from './AddStock'
 import EditTrackingStock from './EditTrackingStock'
-import { TTrackingStock } from '@/types/tracking_stock.type'
 import toast from 'react-hot-toast'
 import DeleteTrackingStock from './DeleteTrackingStock'
 import OrdersTableModal from './OrdersTableModal'
+import StartStockTracking from './StartStockTracking'
+import StopStockTracking from './StopStockTracking'
+import { TTrackingStock } from '@/types/tracking_stock.type'
+import { isMarketOpen } from '@/utils/marketClock'
 
 function TrackingStockManagement() {
   const [trackingStocks, setTrackingStocks] = useState<TTrackingStock[]>([])
@@ -15,6 +18,8 @@ function TrackingStockManagement() {
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [isViewOrdersOpen, setIsViewOrdersOpen] = useState(false)
+  const [isStartDialogOpen, setIsStartDialogOpen] = useState(false)
+  const [isStopDialogOpen, setIsStopDialogOpen] = useState(false)
 
   const fetchTrackingStocks = useCallback(async () => {
     try {
@@ -49,13 +54,24 @@ function TrackingStockManagement() {
     setIsViewOrdersOpen(true)
   }
 
-  const handleDeleteTrackingStock = async (selectedStock: TTrackingStock) => {
+  const handleDeleteTrackingStock = (selectedStock: TTrackingStock) => {
     setIsDeleteOpen(true)
+    setSelectedStock(selectedStock)
+  }
+
+  const handleStartTrackingStock = (selectedStock: TTrackingStock) => {
+    setIsStartDialogOpen(true)
+    setSelectedStock(selectedStock)
+  }
+
+  const handleStopTrackingStock = (selectedStock: TTrackingStock) => {
+    setIsStopDialogOpen(true)
     setSelectedStock(selectedStock)
   }
 
   const onConfirmDelete = async () => {
     try {
+      setIsLoading(true)
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tracking-stocks/${selectedStock?.id}`, {
         method: 'DELETE',
         headers: {
@@ -63,11 +79,76 @@ function TrackingStockManagement() {
         },
         credentials: 'include',
       })
-      if (!response.ok) throw new Error('Failed to delete tracking stock')
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || 'Failed to delete tracking stock')
+      }
       toast.success('Deleted successfully')
-      fetchTrackingStocks()
+      setTrackingStocks(trackingStocks.filter((stock) => stock.id !== selectedStock?.id))
+      setIsDeleteOpen(false)
+      setSelectedStock(null)
     } catch (error: any) {
       toast.error(error.message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const onConfirmStart = async () => {
+    try {
+      setIsLoading(true)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tracking-stocks/${selectedStock?.id}/start`, {
+        method: 'PATCH',
+        headers: {
+          Accept: 'application/json',
+        },
+        credentials: 'include',
+      })
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || 'Failed to start tracking stock')
+      }
+      toast.success('Started successfully')
+      setIsStartDialogOpen(false)
+      setTrackingStocks(trackingStocks.map((stock) => stock.id === selectedStock?.id ? { ...stock, status: 'ACTIVE' } : stock))
+      setSelectedStock(null)
+    } catch (error: Error | any) {
+      if (error instanceof Error) {
+        toast.error(error.message)
+      } else {
+        toast.error('Failed to start tracking stock')
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const onConfirmStop = async () => {
+    try {
+      setIsLoading(true)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tracking-stocks/${selectedStock?.id}/stop`, {
+        method: 'PATCH',
+        headers: {
+          Accept: 'application/json',
+        },
+        credentials: 'include',
+      })
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || 'Failed to stop tracking stock')
+      }
+      toast.success('Stopped successfully')
+      setIsStopDialogOpen(false)
+      setTrackingStocks(trackingStocks.map((stock) => stock.id === selectedStock?.id ? { ...stock, status: 'INACTIVE' } : stock))
+      setSelectedStock(null)
+    } catch (error: Error | any) {
+      if (error instanceof Error) {
+        toast.error(error.message)
+      } else {
+        toast.error('Failed to stop tracking stock')
+      }
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -81,17 +162,20 @@ function TrackingStockManagement() {
         <AddStock onSuccess={fetchTrackingStocks} />
       </div>
 
-      <div className='glass-card rounded-2xl overflow-hidden border border-white/5'>
+      <div className='glass-card rounded-2xl border border-white/5'>
         <ListTrackingStock
           trackingStocks={trackingStocks}
-          isLoading={isLoading}
           handleEditTrackingStock={handleEditTrackingStock}
           handleDeleteTrackingStock={handleDeleteTrackingStock}
           handleViewOrders={handleViewOrders}
+          handleStartTrackingStock={handleStartTrackingStock}
+          handleStopTrackingStock={handleStopTrackingStock}
+          isLoading={isLoading}
+          isMarketOpen={isMarketOpen()}
         />
       </div>
 
-      {selectedStock && (
+      {selectedStock && isViewOrdersOpen && (
         <OrdersTableModal
           isOpen={isViewOrdersOpen}
           setIsOpen={setIsViewOrdersOpen}
@@ -114,6 +198,27 @@ function TrackingStockManagement() {
           setIsOpen={setIsDeleteOpen}
           onConfirm={onConfirmDelete}
           stockName={selectedStock.trading_symbol}
+          isLoading={isLoading}
+        />
+      )}
+
+      {selectedStock && (
+        <StartStockTracking
+          isOpen={isStartDialogOpen}
+          setIsOpen={setIsStartDialogOpen}
+          selectedStock={selectedStock}
+          onConfirm={onConfirmStart}
+          isLoading={isLoading}
+        />
+      )}
+
+      {selectedStock && (
+        <StopStockTracking
+          isOpen={isStopDialogOpen}
+          setIsOpen={setIsStopDialogOpen}
+          selectedStock={selectedStock}
+          onConfirm={onConfirmStop}
+          isLoading={isLoading}
         />
       )}
     </div>

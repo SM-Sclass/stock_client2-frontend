@@ -49,6 +49,7 @@ function EditTrackingStock({ trackingStock, isOpen, setIsOpen, onSuccess }: Prop
       target: trackingStock.target,
       stoploss: trackingStock.stoploss,
       quantity: trackingStock.quantity,
+      order_price_limit: trackingStock.order_price_limit,
       status: trackingStock.status,
     },
   })
@@ -61,6 +62,7 @@ function EditTrackingStock({ trackingStock, isOpen, setIsOpen, onSuccess }: Prop
       target: trackingStock.target,
       stoploss: trackingStock.stoploss,
       quantity: trackingStock.quantity,
+      order_price_limit: trackingStock.order_price_limit,
       status: trackingStock.status,
     })
   }, [trackingStock, form])
@@ -115,6 +117,7 @@ function EditTrackingStock({ trackingStock, isOpen, setIsOpen, onSuccess }: Prop
               {...register('trading_symbol')}
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm text-gray-500 cursor-not-allowed outline-none"
             />
+            {errors.trading_symbol && <p className="text-red-400 text-xs mt-1.5 ml-1 font-medium">{errors.trading_symbol.message}</p>}
           </div>
 
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -128,6 +131,7 @@ function EditTrackingStock({ trackingStock, isOpen, setIsOpen, onSuccess }: Prop
                 {...register('exchange')}
                 className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm text-gray-500 cursor-not-allowed outline-none"
               />
+              {errors.exchange && <p className="text-red-400 text-xs mt-1.5 ml-1 font-medium">{errors.exchange.message}</p>}
             </div>
 
             <div className='space-y-2'>
@@ -140,6 +144,7 @@ function EditTrackingStock({ trackingStock, isOpen, setIsOpen, onSuccess }: Prop
                 {...register('instrument_token', { valueAsNumber: true })}
                 className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm text-gray-500 cursor-not-allowed outline-none"
               />
+              {errors.instrument_token && <p className="text-red-400 text-xs mt-1.5 ml-1 font-medium">{errors.instrument_token.message}</p>}
             </div>
           </div>
 
@@ -178,6 +183,18 @@ function EditTrackingStock({ trackingStock, isOpen, setIsOpen, onSuccess }: Prop
               />
               {errors.quantity && <p className="text-red-400 text-[10px] font-medium mt-1 ml-1">{errors.quantity.message}</p>}
             </div>
+
+            <div className='space-y-2 group/input'>
+                <label htmlFor="order_price_limit" className="text-sm font-semibold text-gray-400 ml-1">Order Price Limit</label>
+                <input
+                  type="number"
+                  id="order_price_limit"
+                  {...register('order_price_limit', { valueAsNumber: true })}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-2xl focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none text-sm font-medium text-white"
+                  placeholder="50,000.50"
+                />
+                {errors.order_price_limit && <p className="text-red-400 text-[10px] font-medium mt-1 ml-1">{errors.order_price_limit.message}</p>}
+              </div>
           </div>
 
           <div className='flex flex-col md:flex-row items-center justify-end gap-3 pt-4'>

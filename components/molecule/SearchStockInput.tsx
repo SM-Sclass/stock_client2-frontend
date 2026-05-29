@@ -4,7 +4,10 @@ import { TInstrument } from '@/types/instrument.type'
 import { Search, Loader2 } from 'lucide-react'
 
 const searchStock = async (name: string): Promise<TInstrument[]> => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/stocks/search?name=${name}`)
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/stocks/search?name=${name}`, {
+    method: "GET",
+    credentials: "include"
+  })
   if (!response.ok) {
     const errorData = await response.json()
     throw new Error(errorData.message || 'Failed to search stock')
