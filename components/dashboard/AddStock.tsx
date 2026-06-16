@@ -55,8 +55,8 @@ function AddStock({ onSuccess }: Props) {
       trading_symbol: '',
       exchange: '',
       instrument_token: 0,
-      target: 0,
-      stoploss: 0,
+      target: 1,
+      stoploss: 1,
       quantity: 1,
       order_price_limit:0,
       status: 'ACTIVE'
@@ -154,7 +154,7 @@ function AddStock({ onSuccess }: Props) {
             </div>
 
             <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-              <div className='space-y-2 group/input'>
+              {/* <div className='space-y-2 group/input'>
                 <label htmlFor="target" className="text-sm font-semibold text-gray-400 ml-1">Target</label>
                 <input
                   type="number"
@@ -190,7 +190,7 @@ function AddStock({ onSuccess }: Props) {
                   placeholder="1"
                 />
                 {errors.quantity && <p className="text-red-400 text-[10px] font-medium mt-1 ml-1">{errors.quantity.message}</p>}
-              </div>
+              </div> */}
 
               <div className='space-y-2 group/input'>
                 <label htmlFor="order_price_limit" className="text-sm font-semibold text-gray-400 ml-1">Order Price Limit</label>

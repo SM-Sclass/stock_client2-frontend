@@ -149,7 +149,7 @@ function EditTrackingStock({ trackingStock, isOpen, setIsOpen, onSuccess }: Prop
           </div>
 
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-            <div className='space-y-2 group/input'>
+            {/* <div className='space-y-2 group/input'>
               <label htmlFor="target" className="text-sm font-semibold text-gray-400 ml-1">Target</label>
               <input
                 type="number"
@@ -182,7 +182,7 @@ function EditTrackingStock({ trackingStock, isOpen, setIsOpen, onSuccess }: Prop
                 className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-2xl focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none text-sm font-medium text-white"
               />
               {errors.quantity && <p className="text-red-400 text-[10px] font-medium mt-1 ml-1">{errors.quantity.message}</p>}
-            </div>
+            </div> */}
 
             <div className='space-y-2 group/input'>
                 <label htmlFor="order_price_limit" className="text-sm font-semibold text-gray-400 ml-1">Order Price Limit</label>
