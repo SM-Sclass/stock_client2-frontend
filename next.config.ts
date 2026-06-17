@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
               "script-src 'self' 'unsafe-inline'", 
               "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
               "img-src 'self' data: https:", // Allows external images
-              "connect-src 'self' https://www.backend.algotrading.live https://cdn.jsdelivr.net",
+              "connect-src 'self' https://www.backend.algotrading.live https://backend.algotrading.live https://cdn.jsdelivr.net",
               "font-src 'self' https:",      // Allows Google Fonts etc.
               "object-src 'none'",
               "base-uri 'self'",
