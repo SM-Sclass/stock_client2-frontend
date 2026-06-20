@@ -220,7 +220,7 @@ function ListTrackingStock({
                           }}
                           type='button'
                           // disabled={!isMarketOpen}
-                          className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-300 hover:bg-white/5 hover:text-white rounded-xl transition-all ${!isMarketOpen ? 'opacity-50 cursor-not-allowed' : ''}`}
+                          className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-300 hover:bg-white/5 hover:text-white rounded-xl transition-all`}
                         >
                           {toggleToStatus(stock.status)}
                         </button>
